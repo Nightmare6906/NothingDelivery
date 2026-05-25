@@ -1,0 +1,822 @@
+/* ==========================================================================
+   1. БАЗОВІ НАЛАШТУВАННЯ ТА СКИДАННЯ
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    color: #333; 
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+
+    /* КАВОВО-ШОКОЛАДНИЙ ГРАДІЄНТ З ЧОРНОЮ ВУАЛЛЮ */
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
+                radial-gradient(circle at center, #8e5a36 0%, #5c3a21 40%, #3d2411 70%, #26140a 100%);
+    
+    background-size: 100% 100%, 200% 200%;
+    animation: gradientShift 30s linear infinite alternate;
+}
+
+@keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    width: 100%;
+    padding: 10px 0 60px 0; 
+}
+
+/* ==========================================================================
+   2. ХЕДЕР ТА НАВІГАЦІЯ
+   ========================================================================== */
+header {
+    display: flex;
+    justify-content: center; 
+    padding: 20px 0 10px 0;   
+    z-index: 10;
+    position: relative;
+}
+
+header nav {
+    width: calc(100% - 40px);
+    max-width: 1900px;
+    
+    /* Додаємо текстуру замість звичайного білого кольору */
+    background: url('a42be63ee5f4109252e8d4763a42dfcb.jpg') repeat; 
+    
+    border-radius: 12px;
+    padding: 22px 20px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12); 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 0.95; /* Робимо трохи щільнішим, щоб текстуру було добре видно */
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+header nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 180ms ease;
+}
+
+header nav ul li a:hover {
+    background: rgba(45, 106, 79, 0.08);
+}
+
+.logo { display: flex; align-items: center; height: 50px; }
+.logo a { display: flex; align-items: center; height: 100%; }
+.logo img { height: 100%; width: auto; object-fit: contain; transition: transform 0.2s ease; }
+.logo img:hover { transform: scale(1.05); }
+
+.cart-link {
+    background: #2d6a4f;
+    color: #fff !important;
+    border-radius: 8px;
+    padding: 8px 16px !important;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(45, 106, 79, 0.2);
+    transition: all 0.2s ease !important;
+}
+
+.cart-link:hover {
+    background: #1f5c05 !important;
+    transform: translateY(-1px);
+}
+
+#cart-count {
+    background: #fff;
+    color: #2d6a4f;
+    font-size: 0.85rem;
+    padding: 1px 6px;
+    border-radius: 20px;
+    font-weight: 700;
+    transition: transform 0.2s ease;
+}
+
+/* ==========================================================================
+   3. КАРУСЕЛЬ (СЛАЙДЕР)
+   ========================================================================== */
+.carousel {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    width: calc(100% - 40px); 
+    max-width: 1900px;
+    margin: 0 auto 20px auto; 
+    position: relative;
+    z-index: 10;
+}
+
+.carousel-inner {
+    width: 100%; 
+    height: 400px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 20px;     
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden; 
+}
+
+.slides {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1); 
+    will-change: transform;
+}
+
+.slide {
+    flex: 0 0 100%; 
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    display: block;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100; 
+    background: none !important; 
+    color: #ffffff;      
+    font-size: 3.5rem;   
+    border: none;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease, transform 0.3s ease;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); 
+}
+
+.carousel-btn:hover {
+    color: #ccffcc; 
+    transform: translateY(-50%) scale(1.1);
+}
+
+.prev-btn { left: 10px; }
+.next-btn { right: 10px; }
+
+.indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.indicator.active {
+    background: #ffffff;
+    transform: scale(1.3);
+}
+
+/* ==========================================================================
+   4. БЕЗРАМКОВІ ПОСТЕРИ КАТЕГОРІЙ
+   ========================================================================== */
+.banners-container {
+    display: flex;
+    width: calc(100% - 40px);
+    max-width: 1900px;
+    height: 420px; 
+    gap: 0; 
+    margin: 10px auto 30px auto;
+    border-radius: 20px;
+    overflow: hidden; 
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+.category-banner {
+    flex: 1; 
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: flex 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
+}
+
+.category-banner:hover {
+    flex: 1.3; 
+}
+
+.category-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.category-banner:hover img {
+    transform: scale(1.05);
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; 
+    padding: 30px;
+    box-sizing: border-box;
+    transition: background 0.3s ease;
+}
+
+.category-banner:hover .banner-overlay {
+    background: linear-gradient(to top, rgba(45, 106, 79, 0.8) 0%, rgba(0,0,0,0.3) 70%); 
+}
+
+.banner-overlay h2 {
+    color: #ffffff;
+    font-size: 2rem;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.banner-btn {
+    align-self: flex-start;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.category-banner:hover .banner-btn {
+    background: #ffffff;
+    color: #2d6a4f;
+}
+
+/* ==========================================================================
+   5. СЕКЦІЯ ТОВАРІВ ТА СІТКА (7 КАРТОК)
+   ========================================================================== */
+.products-container {
+    width: calc(100% - 40px);
+    max-width: 1900px;
+    margin: 10px auto 0 auto;
+    z-index: 10;
+    display: none; 
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.products-container.active {
+    display: block;
+    opacity: 1;
+}
+
+.section-title {
+    color: #ffffff;
+    font-size: 2.2rem;
+    margin: 30px 0 25px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    text-align: center;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); 
+    gap: 15px;
+    width: 100%;
+}
+
+.product-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.product-img {
+    width: 100%;
+    height: 160px;
+    background: #f0f0f0;
+    overflow: hidden;
+}
+
+.product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-img img {
+    transform: scale(1.05);
+}
+
+.product-info {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.product-name {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.product-price {
+    font-size: 1.15rem;
+    color: #2d6a4f;
+    font-weight: 700;
+}
+
+.add-to-cart-btn {
+    width: 100%;
+    background: #2d6a4f;
+    color: white;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.add-to-cart-btn:hover {
+    background: #17ff2a;
+    color: #1f5c05;
+}
+
+/* ==========================================================================
+   6. СЕКЦІЯ ІНВЕНТАРЯ (КЛАС СТИЛІВ ДЛЯ ПОКУПОК)
+   ========================================================================== */
+.inventory-container {
+    width: calc(100% - 40px);
+    max-width: 1900px;
+    margin: 40px auto 0 auto;
+    z-index: 10;
+    display: none; /* Активується через JS після покупки */
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.inventory-container.active {
+    display: block;
+    opacity: 1;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 15px;
+    width: 100%;
+}
+
+.empty-inventory-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 30px;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Картка активованого товару */
+.inventory-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    border: 2px solid #b58253; /* Золотаво-кавова рамка цінності */
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.inventory-qty-badge {
+    background: #b58253;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    align-self: flex-start;
+    margin-bottom: 5px;
+}
+
+.activate-btn {
+    width: 100%;
+    background: #b58253;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.activate-btn:hover {
+    background: #e9c46a; /* Золоте сяйво при активації */
+    color: #333;
+    box-shadow: 0 0 12px rgba(233, 196, 106, 0.6);
+}
+
+/* ==========================================================================
+   7. МОДАЛЬНІ ВІКНА (КОШИК ТА КОНТАКТИ)
+   ========================================================================== */
+.cart-modal, .contacts-modal {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px); 
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.cart-modal-content, .contacts-modal-content {
+    background: #ffffff;
+    width: 90%;
+    max-width: 550px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    animation: fadeInModal 0.3s ease;
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.cart-modal-header, .contacts-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-modal-header h2, .contacts-modal-header h2 {
+    color: #2d6a4f;
+    font-size: 1.5rem;
+}
+
+.close-cart-btn, .close-contacts-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s;
+}
+
+.close-cart-btn:hover, .close-contacts-btn:hover { color: #ff4d4d; }
+
+.cart-items-list, .contacts-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.empty-cart-message {
+    text-align: center;
+    color: #777;
+    font-size: 1.1rem;
+    padding: 40px 0;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f5f5f5;
+    gap: 15px;
+}
+
+.cart-item-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-grow: 1;
+}
+
+.cart-item-title { font-weight: 600; font-size: 0.95rem; color: #333; }
+.cart-item-price { color: #2d6a4f; font-weight: 700; font-size: 0.95rem; }
+.cart-item-controls { display: flex; align-items: center; gap: 10px; }
+
+.quantity-btn {
+    background: #e2e8f0; border: none; width: 28px; height: 28px;
+    border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem;
+}
+.quantity-btn:hover { background: #cbd5e1; }
+.item-count { font-weight: 600; min-width: 20px; text-align: center; }
+.delete-item-btn { background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 1.2rem; }
+
+.cart-modal-footer { padding: 20px; border-top: 1px solid #eee; background: #fcfcfc; border-radius: 0 0 20px 20px; }
+.cart-total { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; }
+#cart-total-price { color: #2d6a4f; }
+
+.checkout-btn {
+    width: 100%; background: #2d6a4f; color: white; border: none; padding: 14px;
+    border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(45, 106, 79, 0.2);
+}
+.checkout-btn:hover { background: #1f5c05; }
+
+.contact-block { margin-bottom: 15px; }
+.contact-block h3 { font-size: 1.15rem; color: #333; margin-bottom: 8px; font-weight: 600; }
+.contact-block p { font-size: 1rem; color: #555; margin: 6px 0; }
+.contact-block a { color: #2d6a4f; text-decoration: none; font-weight: 600; transition: color 0.2s; }
+.contact-block a:hover { color: #17ff2a; text-decoration: underline; }
+.contacts-divider { border: none; border-top: 1px solid #eee; margin: 15px 0; }
+
+/* ==========================================================================
+   8. СПОВІЩЕННЯ (TOAST) ДЛЯ КОПІЮВАННЯ ТА ДОСТАВКИ
+   ========================================================================== */
+.toast-notification {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: #2d6a4f; color: #ffffff; padding: 14px 28px; border-radius: 30px;
+    font-weight: 600; text-align: center; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    z-index: 2000; opacity: 0; pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+}
+.toast-notification.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+/* Тимчасовий окремий стиль для великих сповіщень активації */
+.toast-notification.activation-toast {
+    background: #b58253;
+    border: 2px solid #fff;
+    font-size: 1.05rem;
+}
+
+/* ==========================================================================
+   9. АДАПТИВНІСТЬ
+   ========================================================================== */
+@media (max-width: 1600px) {
+    .products-grid, .inventory-grid { grid-template-columns: repeat(5, 1fr); }
+}
+@media (max-width: 1200px) {
+    .products-grid, .inventory-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 900px) {
+    .banners-container { flex-direction: column; height: auto; }
+    .category-banner { height: 200px; flex: none; }
+    .category-banner:hover { flex: none; }
+    .products-grid, .inventory-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+    header nav { padding: 10px 14px; width: calc(100% - 28px); }
+    header nav ul { gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .carousel { width: calc(100% - 28px); }
+    .carousel-inner { height: 250px; }
+    .carousel-btn { font-size: 2.5rem; width: 40px; height: 40px; }
+    .prev-btn { left: 5px; } .next-btn { right: 5px; }
+    .products-container, .inventory-container { width: calc(100% - 28px); }
+    .products-grid, .inventory-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .product-img { height: 130px; }
+}
+/* ==========================================================================
+   6. МОДАЛЬНЕ ВІКНО ІНВЕНТАРЯ
+   ========================================================================== */
+.inventory-modal {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px); 
+    z-index: 1040; /* Між кошиком та контактами */
+    justify-content: center;
+    align-items: center;
+}
+
+.inventory-modal-content {
+    background: #ffffff;
+    width: 95%;
+    max-width: 900px; /* Широке вікно для зручної сітки предметів */
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+    animation: fadeInInventory 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes fadeInInventory {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.inventory-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.inventory-modal-header h2 {
+    color: #b58253; /* Золотаво-кавовий колір для інвентаря */
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.close-inventory-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s;
+}
+
+.close-inventory-btn:hover { color: #ff4d4d; }
+
+.inventory-modal-body {
+    padding: 25px;
+    overflow-y: auto;
+}
+
+/* Сітка всередині вікна */
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 предмети в ряд у вікні */
+    gap: 20px;
+    width: 100%;
+}
+
+.empty-inventory-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #666;
+    background: #f8fafc;
+    padding: 40px;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: 2px dashed #cbd5e1;
+}
+
+/* Картки предметів */
+.inventory-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px solid #b58253;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+
+.inventory-card:hover {
+    transform: translateY(-3px);
+}
+
+.inventory-qty-badge {
+    background: #b58253;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.inventory-card .product-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.activate-btn {
+    width: 100%;
+    background: #b58253;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.activate-btn:hover {
+    background: #2d6a4f; /* Змінює колір на зелений при наведенні (готовий активувати) */
+    box-shadow: 0 0 12px rgba(45, 106, 79, 0.4);
+}
+
+/* Адаптивність для вікна інвентаря */
+@media (max-width: 768px) {
+    .inventory-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+    .inventory-grid { grid-template-columns: 1fr; }
+}
+/* Базові стилі для слайдів */
+.slide {
+    width: 100%;
+    height: 400px; /* Висота для ПК */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+}
+
+/* Картинки для ПК (заміни на свої назви файлів) */
+.slide-1 { background-image: url('лого.jpg'); }
+.slide-2 { background-image: url('постійні клієнти.jpg'); }
+.slide-3 { background-image: url('транспорт.jpg'); }
+
+/* Адаптивність для телефонів */
+@media (max-width: 768px) {
+    .slide {
+        height: 250px; /* Висота для мобільних */
+    }
+
+    /* Картинки для телефонів (заміни на свої назви файлів) */
+    .slide-1 { background-image: url('ND phone.jpg'); }
+    .slide-2 { background-image: url('доставка телефон.jpg'); }
+    .slide-3 { background-image: url('clients phone.jpg'); }
+}
